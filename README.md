@@ -19,23 +19,28 @@
 
  Calling directly:
 
-    def get_funny_cats(id)
-      HttpRetriable.call do
-        LulzService.get("/cats/lulz/#{id}")
-      end
-    end
+```ruby
+def get_funny_cats(id)
+  HttpRetriable.call do
+    LulzService.get("/cats/lulz/#{id}")
+  end
+end
+```
 
  Mixing it in:
 
-   class FunnyCats
+```ruby
+class FunnyCats
 
-     include HttpRetriable
+  include HttpRetriable
 
-      def get_funny_cats(id)
-        retry_http do
-          LulzService.get("/cats/lulz/#{id}")
-        end
-     end
+  def get_funny_cats(id)
+    retry_http do
+      LulzService.get("/cats/lulz/#{id}")
+    end
+  end
+end
+```
 
  You can provide several options:
    retries    - Integer: The number of times to retry the request
@@ -44,12 +49,14 @@
 
  Example:
 
-    def get_funny_cats(id)
-      exceptions = [LulzService::Error, Timeout::Error]
-      HttpRetriable.call(:retries => 3, :sleep => 10, :exceptions => exceptions) do
-        LulzService.get("/cats/lulz/#{id}")
-      end
-    end
+```ruby
+def get_funny_cats(id)
+  exceptions = [LulzService::Error, Timeout::Error]
+  HttpRetriable.call(:retries => 3, :sleep => 10, :exceptions => exceptions) do
+    LulzService.get("/cats/lulz/#{id}")
+  end
+end
+```
 
 
 ## Installation
