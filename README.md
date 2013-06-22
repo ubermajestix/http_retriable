@@ -15,9 +15,9 @@
  for use within your own class or module, or you can call the module directly,
  examples are below.
 
- Examples:
+##Examples:
 
- Calling directly:
+###Calling directly:
 
 ```ruby
 def get_funny_cats(id)
@@ -27,7 +27,7 @@ def get_funny_cats(id)
 end
 ```
 
- Mixing it in:
+###Mixing it in:
 
 ```ruby
 class FunnyCats
@@ -42,12 +42,11 @@ class FunnyCats
 end
 ```
 
+### Options
  You can provide several options:
-   retries    - Integer: The number of times to retry the request
-   sleep      - Integer: The number of seconds to sleep
-   exceptions - Array: List of exceptions classes
-
- Example:
+   * retries    - Integer: The number of times to retry the request
+   * sleep      - Integer: The number of seconds to sleep
+   * exceptions - Array: List of exceptions classes
 
 ```ruby
 def get_funny_cats(id)
