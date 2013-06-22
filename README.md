@@ -73,7 +73,7 @@ Or install it yourself as:
 
 ## Contributing
 
-1. Fork it
+1. Fork it.
 2. Branch it.
 3. Code it.
 4. Pull Request it.
