@@ -1,33 +1,29 @@
 require "http_retriable/version"
-
 module HttpRetriable
 
   extend self
 
   def retry_http(*args, &block)
     options = args.extract_options!
-  
-    retries = options.fetch(:retries, 5)
-    sleep = options.fetch(:sleep, false)
-    backoff = !sleep # if sleep is provided by the user, don't backoff
-    exceptions = options.fetch(:exceptions, [
-      RestClient::RequestTimeout,
-      RestClient::ServerBrokeConnection,
+    default_exceptions = [
       EOFError,
       Errno::ECONNREFUSED,
       Errno::ECONNRESET,
       Errno::EHOSTUNREACH,
       Errno::EINVAL,
       Errno::EPIPE,
-      Errno::ETIMEDOUT,
-      Net::HTTPBadResponse,
-      Net::HTTPHeaderSyntaxError,
-      Net::ProtocolError,
-      SocketError,
-      Timeout::Error])
+      Errno::ETIMEDOUT]
+    if defined?(RestClient)
+      default_exceptions += [RestClient::RequestTimeout, RestClient::ServerBrokeConnection]
+    end
+
+    retries = options.fetch(:retries, 5)
+    should_sleep = options.fetch(:sleep, false)
+    backoff = !should_sleep # if sleep is provided by the user, don't backoff
+    exceptions = options.fetch(:exceptions, default_exceptions)
 
     retried = 0
-    seconds_to_sleep = sleep ? sleep : 2
+    seconds_to_sleep = should_sleep ? should_sleep : 2
     quick_retries = 2
     begin
       yield
@@ -55,7 +51,7 @@ module HttpRetriable
   end
 
   def self.call(*args, &block)
-    self.retry_http(args, &block)
+    self.retry_http(*args, &block)
   end
 end
 
