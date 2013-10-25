@@ -7,8 +7,9 @@ module HttpRetriable
   def retry_http(*args, &block)
     options = args.extract_options!
   
-    options[:retries] ||= 5
-    options[:sleep] ||= 0
+    retries = options.fetch(:retries, 5)
+    sleep = options.fetch(:sleep, false)
+    backoff = !sleep # if sleep is provided by the user, don't backoff
     exceptions = options.fetch(:exceptions, [
       RestClient::RequestTimeout,
       RestClient::ServerBrokeConnection,
@@ -26,15 +27,29 @@ module HttpRetriable
       Timeout::Error])
 
     retried = 0
+    seconds_to_sleep = sleep ? sleep : 2
+    quick_retries = 2
     begin
       yield
     rescue *exceptions => e
-      if retried + 1 < options[:retries]
-        retried += 1
-        sleep options[:sleep]
-        retry
+      retried += 1
+      if backoff
+        if retried < quick_retries
+          retry
+        elsif retried < retries
+          seconds_to_sleep = seconds_to_sleep ** 2
+          sleep seconds_to_sleep
+          retry
+        else
+          raise e
+        end
       else
-        raise e
+        if retried < retries
+          sleep seconds_to_sleep
+          retry
+        else
+          raise e
+        end
       end
     end
   end
