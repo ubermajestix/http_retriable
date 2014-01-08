@@ -3,8 +3,10 @@
  HttpRetriable is designed to catch routine http errors and retry the provided
  block that makes network calls.
 
- By default, requests are tried 5 times with an exponential backoff to prevent
- thrashing a service that may need a few seconds to recover.
+ By default, requests are tried 5 times with an exponential backoff to
+ prevent thrashing a service that may need a few seconds to recover. It
+ will retry your call twice without a sleep before backing off and
+ retrying again. The number of quick retries is configurable.
 
  You can optionally provide a constant amount of time to sleep between retries
  and provide the number of times to retry the request if 5 retries doesn't suit
@@ -44,9 +46,10 @@ end
 
 ### Options
  You can provide several options:
-   * retries    - Integer: The number of times to retry the request
-   * sleep      - Integer: The number of seconds to sleep
-   * exceptions - Array: List of exceptions classes
+   * retries          - Integer: The number of times to retry the request
+   * quick_retries    - Integer: The number of times to retry the request without backing off.
+   * sleep            - Integer: The number of seconds to sleep
+   * exceptions       - Array: List of exceptions classes
 
 ```ruby
 def get_funny_cats(id)

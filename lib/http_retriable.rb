@@ -21,10 +21,10 @@ module HttpRetriable
     should_sleep = options.fetch(:sleep, false)
     backoff = !should_sleep # if sleep is provided by the user, don't backoff
     exceptions = options.fetch(:exceptions, default_exceptions)
+    quick_retries = options.fetch(:quick_retries, 2)
 
     retried = 0
     seconds_to_sleep = should_sleep ? should_sleep : 2
-    quick_retries = 2
     begin
       yield
     rescue *exceptions => e
