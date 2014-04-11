@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "http_retriable"
   gem.require_paths = ["lib"]
   gem.version       = HttpRetriable::VERSION
+
+  gem.add_development_dependency "mocha"
 end

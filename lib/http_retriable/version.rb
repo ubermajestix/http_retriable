@@ -1,3 +1,3 @@
-module HttpRetriable
-  VERSION = "0.0.3"
+class HttpRetriable
+  VERSION = "1.0.0"
 end
